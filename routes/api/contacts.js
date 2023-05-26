@@ -8,7 +8,7 @@ const { HttpError } = require("../../helpers");
 const router = express.Router();
 
 const contactAddShema = Joi.object({
-  name: Joi.string().required().messages({ "any.required": `missing required name field` }),
+  name: Joi.string().required().messages({ "any.required": `missing required  name field` }),
   email: Joi.string().required().messages({ "any.required": `missing required email field` }),
   phone: Joi.string().required().messages({ "any.required": `missing required phone field` }),
 })
@@ -74,15 +74,20 @@ router.delete('/:contactId', async (req, res, next) =>
 router.put('/:contactId', async (req, res, next) =>
 {
   try {
+    const bodyLength = Object.keys(req.body).length;
+
+    if (!bodyLength) {
+       throw HttpError(400, "missing fields")
+    }
     const { error } = contactAddShema.validate(req.body)
     if (error) {
-      throw HttpError(400, "missing fields")
+      throw HttpError(400, error.message)
     }
     const { contactId } = req.params;
     const result = await contactsService.updateContact(contactId, req.body);
     
     if (!result) {
-      throw HttpError(404, )
+      throw HttpError(404)
     }
    
     res.json(result);
