@@ -15,7 +15,7 @@ const register = async (req, res) =>
     const user = await User.findOne({ email });
 
     if (user) {
-        throw HttpError(409, "Email already in use")
+        throw HttpError(409, "Email in use")
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
@@ -24,6 +24,7 @@ const register = async (req, res) =>
 
     res.status(201).json({
         email: newUser.email,
+        subscription: newUser.subscription,
 
     })
 }
@@ -33,11 +34,11 @@ const login = async (req, res) =>
 
     const user = await User.findOne({ email });
     if (!user) {
-        throw HttpError(401, "Email or password invalid");
+        throw HttpError(401, "Email or password is wrong");
     }
     const passwordCompare = await bcrypt.compare(password, user.password);
     if (!passwordCompare) {
-        throw HttpError(401, "Email or password invalid")
+        throw HttpError(401, "Email or password is wrong")
     }
 
     const { _id: id } = user;
@@ -56,8 +57,8 @@ const login = async (req, res) =>
 
 const getCurrent = async (req, res) =>
 {
-    const { email } = req.user;
-    res.json({ email, })
+    const { email, subscription } = req.user;
+    res.json({ email, subscription })
 }
 
 const logout = async (req, res) =>
@@ -66,8 +67,8 @@ const logout = async (req, res) =>
 
     await User.findByIdAndUpdate(_id, { token: "" });
 
-    res.json({
-        message: "Logout success"
+    res.status(204).json({
+        message: "No Content"
     })
 }
 
