@@ -23,8 +23,11 @@ const register = async (req, res) =>
     const newUser = await User.create({ ...req.body, password: hashPassword });
 
     res.status(201).json({
-        email: newUser.email,
-        subscription: newUser.subscription,
+        user: {
+            email: newUser.email,
+            subscription: newUser.subscription,
+        }
+
 
     })
 }
@@ -41,7 +44,7 @@ const login = async (req, res) =>
         throw HttpError(401, "Email or password is wrong")
     }
 
-    const { _id: id } = user;
+    const { _id: id, subscription } = user;
 
     const payload = {
         id,
@@ -52,6 +55,11 @@ const login = async (req, res) =>
 
     res.json({
         token,
+        user: {
+            email,
+            subscription: subscription,
+        }
+
     })
 }
 
