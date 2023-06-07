@@ -1,6 +1,6 @@
 const { HttpError } = require("../helpers");
 
-const validateBodyForPutAndPost = schema =>
+const validateBody = schema =>
 {
     const func = (req, res, next) =>
     {
@@ -20,7 +20,7 @@ const validateBodyForPutAndPost = schema =>
 
 }
 
-const validateBodyForPatch = schema =>
+const validateBodyForFavoriteRoute = schema =>
 {
     const func = (req, res, next) =>
     {
@@ -40,4 +40,4 @@ const validateBodyForPatch = schema =>
 
 }
 
-module.exports = { validateBodyForPutAndPost, validateBodyForPatch }
+module.exports = { validateBody, validateBodyForFavoriteRoute }
