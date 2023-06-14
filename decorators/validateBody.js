@@ -39,5 +39,24 @@ const validateBodyForFavoriteRoute = schema =>
     return func;
 
 }
+const validateBodyForVerify = schema =>
+{
+    const func = (req, res, next) =>
+    {
+        const bodyLength = Object.keys(req.body).length;
 
-module.exports = { validateBody, validateBodyForFavoriteRoute }
+        if (!bodyLength) {
+            throw HttpError(400, "missing required field email")
+        }
+        const { error } = schema.validate(req.body);
+        if (error) {
+            next(HttpError(400, error.message));
+        }
+        next()
+
+    }
+    return func;
+
+}
+
+module.exports = { validateBody, validateBodyForFavoriteRoute, validateBodyForVerify }
